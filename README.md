@@ -70,12 +70,6 @@ mkdir /davidb/yatirsolan/NGS_variant_discovery # the analysis main directory.
 cd /davidb/yatirsolan/NGS_variant_discovery
 mkdir reads alignment variants annotation
 
-gatk MarkDuplicates \
-    -I ${alignment_dir}/SRR5439568_srtd.bam \
-    -O ${alignment_dir}/SRR5439568_srtd_mrkdpl.bam \
-    -M ${alignment_dir}/SRR5439568_srtd_mrkdpl.mtrx \
-    -ASO coordinate # Assume sort order - coordinate, because the BAM file is already sorted in coordinate order.
-
 # Paths & Parameters initialization:
 reads_dir="/davidb/yatirsolan/NGS_analysis/reads"
 alignment_dir="/davidb/yatirsolan/NGS_analysis/alignment"
@@ -460,9 +454,9 @@ In this stage, we aim to omit false positives variants, which have emerged from 
         
          # 2) Indels
         gatk SelectVariants \
-             -V ${variants_dir}/SRR5439568_hptpcl.vcf \
-             -select-type INDEL \
-             -O ${variants_dir}/SRR5439568_hptpcl_indels.vcf
+            -V ${variants_dir}/SRR5439568_hptpcl.vcf \
+            -select-type INDEL \
+            -O ${variants_dir}/SRR5439568_hptpcl_indels.vcf
         ```
         
 - **Adding Filtration tags to the variants** -
@@ -553,7 +547,7 @@ In this stage, we aim to omit false positives variants, which have emerged from 
         --exclude-filtered true 
      # 1.2) SNPs - Exclude variants that failed to pass sample-level filtration.
     echo "$(grep -v -E 'DP_flt|GQ_flt' ${variants_dir}/SRR5439568_hptpcl_snps_fltrd.vcf)" > \
-    			${variants_dir}/SRR5439568_hptpcl_snps_fltrd.vcf
+    ${variants_dir}/SRR5439568_hptpcl_snps_fltrd.vcf
     
     # --------------- for the indels, the same script except for file names --------------- #
     
@@ -564,7 +558,7 @@ In this stage, we aim to omit false positives variants, which have emerged from 
         --exclude-filtered true
      # 2.2) Indels - Exclude variants that failed to pass sample-level filtration.
     echo "$(grep -v -E 'DP_flt|GQ_flt' ${variants_dir}/SRR5439568_hptpcl_indels_fltrd.vcf)" > \
-    			${variants_dir}/SRR5439568_hptpcl_indels_fltrd.vcf
+    ${variants_dir}/SRR5439568_hptpcl_indels_fltrd.vcf
     ```
     
 
@@ -668,8 +662,8 @@ funcotation_header=$(grep '^##' ${annotation_dir}/SRR5439568_hptpcl_snps_fltrd_a
                    grep 'FUNCOTATION' | \
                    sed 's/ //g;s/>//g;s/"//g') # remove spaces, double quotes, and right arrows from the string.
 echo ${funcotation_header##*\Funcotationfieldsare:} | \
-     sed 's/|/\t/g' > \ # replace pipes '|' with tabs '\t'.
-     ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv # adding the columns to the head of an empty file.
+sed 's/|/\t/g' > \ # replace pipes '|' with tabs '\t'.
+${annotation_dir}/SRR5439568_annotated_variants_snps.tsv # adding the columns to the head of an empty file.
 
 # --------------- for the indels, the same script except for file names --------------- #
 
@@ -679,8 +673,8 @@ funcotation_header=$(grep '^##' ${annotation_dir}/SRR5439568_hptpcl_indels_fltrd
                    grep 'FUNCOTATION' | \
                    sed 's/ //g;s/>//g;s/"//g') # remove spaces, double quotes, and right arrows from the string.
 echo ${funcotation_header##*\Funcotationfieldsare:} | \
-     sed 's/|/\t/g' > \ # replace pipes '|' with tabs '\t'.
-     ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv # adding the columns to the head of an empty file.
+sed 's/|/\t/g' > \ # replace pipes '|' with tabs '\t'.
+${annotation_dir}/SRR5439568_annotated_variants_indels.tsv # adding the columns to the head of an empty file.
 ```
 
 - **Adding annotations values to the variants annotations table file** - ****First, we use GATK’s ***VariantsToTable*** function to withdraw the FUNCOTATION values from the INFO column. We drop the values into a temporary file, that will soon be deleted.
@@ -698,8 +692,9 @@ echo ${funcotation_header##*\Funcotationfieldsare:} | \
         -F FUNCOTATION 
       # 1.3) Uniting the column's name and the data itself to form a table (tsv file).
     grep -v 'FUNCOTATION' ${annotation_dir}/SRR5439568_annotated_variants_snps_tmp.tsv | \
-         sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
-    	 >> ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv
+    sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
+    >> ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv
+    
     rm ${annotation_dir}/SRR5439568_annotated_variants_snps_tmp.tsv
     
     # --------------- for the indels, the same script except for file names --------------- #
@@ -711,8 +706,9 @@ echo ${funcotation_header##*\Funcotationfieldsare:} | \
         -F FUNCOTATION 
       # 2.3) Uniting the column's name and the data itself to form a table (tsv file).
     grep -v "FUNCOTATION" ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv | \
-         sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
-    	 >> ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv
+    sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
+    >> ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv
+    
     rm ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv
     ```
     
@@ -742,14 +738,14 @@ The annotated variant table contains columns that described them. For instance, 
 
 ```bash
 -->> cat ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv | \ # checking the annotated indels file
-	 grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
-	 grep -v -E "Benign|benign|synonymous|INTRON"
+     grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
+     grep -v -E "Benign|benign|synonymous|INTRON"
 
 Gencode_27_hugoSymbol   Gencode_27_ncbiBuild    Gencode_27_chromosome   Gencode_27_start        Gencode_27_end  Gencode_27_variantClassi
 
 -->> cat ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv | \ # checking the annotated SNPs file
-	 grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
-	 grep -v -E "Benign|benign|synonymous|INTRON"
+     grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
+     grep -v -E "Benign|benign|synonymous|INTRON"
 
 Gencode_27_hugoSymbol   Gencode_27_ncbiBuild    Gencode_27_chromosome   Gencode_27_start        Gencode_27_end  Gencode_27_variantClassification        Gen...
 GALT      hg38    chr9    34647227        34647227        MISSENSE        SNP       T    T    C    g.chr9:34647227T>C      ENST00000556278.1       + ...

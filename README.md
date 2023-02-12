@@ -424,9 +424,9 @@ This step is performed by GATK’s ***HaplotypeCaller*** function. This function
     
     ```bash
     gatk HaplotypeCaller \
-    	-R ${reference_genome} \
-    	-I ${analaysis_ready_bam} \
-    	-O ${variants_dir}/SRR5439568_hptpcl.vcf
+        -R ${reference_genome} \
+        -I ${analaysis_ready_bam} \
+        -O ${variants_dir}/SRR5439568_hptpcl.vcf
     ```
     
 

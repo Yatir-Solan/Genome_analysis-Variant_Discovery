@@ -224,5 +224,4 @@ sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and repla
 
 rm ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv # adding the columns to the head of an empty file
 
-###
 ### --------- the end --------- ###

@@ -66,15 +66,15 @@ The work will be arranged in 4 directories - reads, alignment, variants, and ann
 
 ```bash
 # Creating directories :
-mkdir /davidb/yatirsolan/NGS_variant_discovery # the analysis main directory.
-cd /davidb/yatirsolan/NGS_variant_discovery
+mkdir /NGS_variant_discovery # the analysis main directory.
+cd /NGS_variant_discovery
 mkdir reads alignment variants annotation
 
 # Paths & Parameters initialization:
-reads_dir="/davidb/yatirsolan/NGS_analysis/reads"
-alignment_dir="/davidb/yatirsolan/NGS_analysis/alignment"
-variants_dir="/davidb/yatirsolan/NGS_analysis/variants"
-annotation_dir='/davidb/yatirsolan/NGS_variant_discovery/2nd_pipeline/annotation'
+reads_dir="/NGS_analysis/reads"
+alignment_dir="/NGS_analysis/alignment"
+variants_dir="/NGS_analysis/variants"
+annotation_dir='/NGS_variant_discovery/2nd_pipeline/annotation'
 ```
 
 ### Getting a reference genome
@@ -92,7 +92,7 @@ annotation_dir='/davidb/yatirsolan/NGS_variant_discovery/2nd_pipeline/annotation
     variants
     annotation
     
-    reference_genome_dir="/davidb/yatirsolan/NGS_analysis/reference/Homo_sapiens/GATK/GRCh38/Sequence/WholeGenomeFasta" # ref. genome directory path
+    reference_genome_dir="/NGS_analysis/reference/Homo_sapiens/GATK/GRCh38/Sequence/WholeGenomeFasta" # ref. genome directory path
     reference_genome=${reference_genome_dir}"/Homo_sapiens_assembly38.fasta" # reference genome path
     
     -->> ls ${reference_genome_dir} -1 
@@ -126,7 +126,7 @@ annotation_dir='/davidb/yatirsolan/NGS_variant_discovery/2nd_pipeline/annotation
             
             ```bash
             # Examine the index files that cane in with the reference genome
-            -->> ls /davidb/yatirsolan/NGS_analysis/reference/Homo_sapiens/GATK/GRCh38/Sequence/BWAIndex/ -1
+            -->> ls /NGS_analysis/reference/Homo_sapiens/GATK/GRCh38/Sequence/BWAIndex/ -1
             Homo_sapiens_assembly38.fasta.64.alt **# what exactly is this file?**
             Homo_sapiens_assembly38.fasta.64.amb # BWA index file 
             Homo_sapiens_assembly38.fasta.64.ann # BWA index file 
@@ -135,7 +135,7 @@ annotation_dir='/davidb/yatirsolan/NGS_variant_discovery/2nd_pipeline/annotation
             Homo_sapiens_assembly38.fasta.64.sa # BWA index file 
             
             # copying the reference genome index files, so they will be in the same directory as the genome itself.
-            -->> cp /davidb/yatirsolan/NGS_analysis/reference/Homo_sapiens/GATK/GRCh38/Sequence/BWAIndex/* ${reference_genome_dir}
+            -->> cp /NGS_analysis/reference/Homo_sapiens/GATK/GRCh38/Sequence/BWAIndex/* ${reference_genome_dir}
             ```
             
         - **Un-indexed genome** - In the case of using an un-indexed reference genome, we can use ***bwa index*** in order to index it. That can be done by the following line.
@@ -350,7 +350,7 @@ SRR5439568_srtd.bam # the output of the alignment
     Interestingly, ***ApplyBQSR*** also provides us with a new *.bai index file (will be elaborated soon).
     
     ```bash
-    known_sites_dir='/davidb/yatirsolan/NGS_variant_discovery/2nd_pipeline/known_sites'
+    known_sites_dir='/NGS_variant_discovery/2nd_pipeline/known_sites'
     
     # Downloading the files crucial for the known set in the BQSR stage.
     wget -P ${known_sites_dir} https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf
@@ -594,7 +594,7 @@ funcotator_dataSources.v1.6.20190124g.tar.gz
 known_sites
 variants
 
-data_sources_dir='/davidb/yatirsolan/NGS_variant_discovery/2nd_pipeline/funcotator_dataSources.v1.6.20190124g'
+data_sources_dir='/NGS_variant_discovery/2nd_pipeline/funcotator_dataSources.v1.6.20190124g'
 ```
 
 ### Functional annotation

@@ -242,7 +242,7 @@ SRR5439568_srtd.bam # the output of the alignment
     
     ```bash
     -->> bwa mem -R ${read_group} -t 4 ${reference_genome} ${raw_reads1} ${raw_reads2} | \ # mapping the reads to the reference genome.
-    	 samtools view -b -h -o ${alignment_dir}/SRR5439568.bam      # converting the final output to be in a BAM format.
+         samtools view -b -h -o ${alignment_dir}/SRR5439568.bam      # converting the final output to be in a BAM format.
     -->> ls ${alignment_dir} -1
     SRR5439568.bam
     SRR5439568_srtd.bam

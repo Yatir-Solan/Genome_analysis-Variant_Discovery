@@ -1,4 +1,4 @@
-# Variant Discovery - GitHub repository - 2nd edition
+# Variant Discovery
 
 # Introduction
 

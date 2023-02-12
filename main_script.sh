@@ -226,4 +226,3 @@ rm ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv # adding the c
 
 ###
 ### --------- the end --------- ###
-###

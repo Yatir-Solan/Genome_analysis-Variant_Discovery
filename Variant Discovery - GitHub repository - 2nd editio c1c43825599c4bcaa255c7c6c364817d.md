@@ -193,7 +193,7 @@ Print screens of one of the files are given when needed. Through all the measure
 
 - **Base quality scores** - above 30 (green zone) for all reads (both files), and there is no significant quality decay toward the margins of the reads.
     
-    ![Untitled](Variant%20Discovery%20-%20GitHub%20repository%20-%202nd%20editio%20c1c43825599c4bcaa255c7c6c364817d/Untitled.png)
+    ![alt text](Untitled.png)
     
 - **Mean sequence quality scores** - The vast majority of the reads maintain mean quality scores that are above 30.
 - **Per base sequence content** - Both files show a rather unbiased distribution. (to my knowledge the slight fluctuation within the beginning is fairly normal).

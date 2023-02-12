@@ -370,7 +370,7 @@ SRR5439568_srtd.bam # the output of the alignment
     gatk ApplyBQSR \
         -R ${reference_genome} \
         -I ${alignment_dir}/SRR5439568_srtd_mrkdpl.bam \
-        *-bqsr* ${alignment_dir}/recalibration.table \
+        -bqsr ${alignment_dir}/recalibration.table \
         -O ${alignment_dir}/SRR5439568_srtd_mrkdpl_bqsr.bam
     
     -- >> ls ${alignment_dir}/*_bqsr* -1

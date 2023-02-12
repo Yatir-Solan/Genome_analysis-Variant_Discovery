@@ -15,7 +15,7 @@ Hopefully, this repository, together with the documents in it, will help others 
 # Case study and objectives
 
 - **Case study** - A newborn male baby, was born to two healthy parents. Several days after his birth he started having diarrhea, throwing up, and his skin turned somewhat yellow. The infant’s exome was obtained (SRR5439568**),** and was sent for genetic analysis.
-- **Objectives** - To analyze the given exome and generate genetic diagnosis for his health condition.
+- **Objectives** - Analyze the given exome and generate genetic diagnosis for his health condition.
 
 ---
 

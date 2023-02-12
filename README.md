@@ -193,22 +193,22 @@ Print screens of one of the files are given when needed. Through all the measure
 
 - **Base quality scores** - above 30 (green zone) for all reads (both files), and there is no significant quality decay toward the margins of the reads.
     
-    ![alt text](per_base_sequence_content.png)
+    ![alt text](per_base_sequence_quality.png)
     
 - **Mean sequence quality scores** - The vast majority of the reads maintain mean quality scores that are above 30.
 - **Per base sequence content** - Both files show a rather unbiased distribution. (to my knowledge the slight fluctuation within the beginning is fairly normal).
     
-    ![Untitled](Variant%20Discovery%20-%20GitHub%20repository%20-%202nd%20editio%20c1c43825599c4bcaa255c7c6c364817d/Untitled%201.png)
+    ![alt text](per_base_sequence_content.png)
     
 - **Per sequence GC content** - **Warning**.
     
-    ![Untitled](Variant%20Discovery%20-%20GitHub%20repository%20-%202nd%20editio%20c1c43825599c4bcaa255c7c6c364817d/Untitled%202.png)
+    ![alt text](per_sequence_GC_content.png)
     
 - **Per base N content** - None for both.
 - **Sequence length distribution** - 101 for all, in both.
 - **Sequence duplication levels - Failure.**
     
-    ![Untitled](Variant%20Discovery%20-%20GitHub%20repository%20-%202nd%20editio%20c1c43825599c4bcaa255c7c6c364817d/Untitled%203.png)
+    ![alt text](sequence_duplication_devels.png)
     
 - **Overrepresented sequences - Warning.**
 - **Adaptor content** - None for both.
@@ -756,4 +756,4 @@ GALT      hg38    chr9    34648170        34648170        SPLICE_SITE     MISSEN
 
 **GALT** - The analysis reveals two different variants appearing at the same gene. It is a metabolic gene, that specifically holds a major role within glycolysis - **galactose-1-phosphate uridylyltransferase**. Its main job - converting galactose to glucose. The absence of this gene is causative for classic Galactosemia. In newborns who suffer from this disease, the consumption of lactose is life-threatening. **Galactosemia** is an autosomal recessive inherited rare disorder. In the IGV screenshot, both variants can be seen, both are heterozygous. For a disorder to take place, an individual should possess deleterious mutations in both chromosomes. Because the described symptoms of the newborn coincide with some of the classic galactosemia symptoms (vomiting, diarrhea, and jaundice), there is a great possibility that each of his chromosomes consists of a different mutation. That case is reasonable even with healthy parents. The other option, in it, the two variants are linked together on the same chromosome is also reasonable. In the latter option, the health situation of the infant is not related to the GALT variants.
 
-![Untitled](Variant%20Discovery%20-%20GitHub%20repository%20-%202nd%20editio%20c1c43825599c4bcaa255c7c6c364817d/Untitled%204.png)
+![alt text](GALT_IGV.png)

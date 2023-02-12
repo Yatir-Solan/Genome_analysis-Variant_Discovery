@@ -68,7 +68,9 @@ The work will be arranged in 4 directories - reads, alignment, variants, and ann
 # Creating directories :
 mkdir /davidb/yatirsolan/NGS_variant_discovery # the analysis main directory.
 cd /davidb/yatirsolan/NGS_variant_discovery
-mkdir reads alignment variants annotationgatk MarkDuplicates \
+mkdir reads alignment variants annotation
+
+gatk MarkDuplicates \
     -I ${alignment_dir}/SRR5439568_srtd.bam \
     -O ${alignment_dir}/SRR5439568_srtd_mrkdpl.bam \
     -M ${alignment_dir}/SRR5439568_srtd_mrkdpl.mtrx \
@@ -246,7 +248,7 @@ SRR5439568_srtd.bam # the output of the alignment
     
     ```bash
     -->> bwa mem -R ${read_group} -t 4 ${reference_genome} ${raw_reads1} ${raw_reads2} | \ # mapping the reads to the reference genome.
-    		 samtools view -b -h -o ${alignment_dir}/SRR5439568.bam      # converting the final output to be in a BAM format.
+    	 samtools view -b -h -o ${alignment_dir}/SRR5439568.bam      # converting the final output to be in a BAM format.
     -->> ls ${alignment_dir} -1
     SRR5439568.bam
     SRR5439568_srtd.bam
@@ -365,10 +367,10 @@ SRR5439568_srtd.bam # the output of the alignment
     # BQSR - Base quality scores adjustments
      # 1) creating the model
     gatk BaseRecalibrator \
-    	  -R ${reference_genome} \
-    	  -I ${alignment_dir}/SRR5439568_srtd_mrkdpl.bam \
-    	  --known-sites ${known_sites} \
-    	  -O ${alignment_dir}/recalibration.table
+    	-R ${reference_genome} \
+    	-I ${alignment_dir}/SRR5439568_srtd_mrkdpl.bam \
+    	--known-sites ${known_sites} \
+    	-O ${alignment_dir}/recalibration.table
     
     # 2) applying the model
     gatk ApplyBQSR \
@@ -428,9 +430,9 @@ This step is performed by GATK’s ***HaplotypeCaller*** function. This function
     
     ```bash
     gatk HaplotypeCaller \
-    	  -R ${reference_genome} \
-    	  -I ${analaysis_ready_bam} \
-    	  -O ${variants_dir}/SRR5439568_hptpcl.vcf
+    	-R ${reference_genome} \
+    	-I ${analaysis_ready_bam} \
+    	-O ${variants_dir}/SRR5439568_hptpcl.vcf
     ```
     
 
@@ -627,7 +629,7 @@ gatk Funcotator \
 
  # 2) Indels
 gatk Funcotator \
-		-R ${reference_genome} \
+    -R ${reference_genome} \
     --ref-version hg38 \
     --data-sources-path ${data_sources_dir} \
     -V ${annotation_ready_indels} \
@@ -667,7 +669,7 @@ funcotation_header=$(grep '^##' ${annotation_dir}/SRR5439568_hptpcl_snps_fltrd_a
                    sed 's/ //g;s/>//g;s/"//g') # remove spaces, double quotes, and right arrows from the string.
 echo ${funcotation_header##*\Funcotationfieldsare:} | \
      sed 's/|/\t/g' > \ # replace pipes '|' with tabs '\t'.
-		 ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv # adding the columns to the head of an empty file.
+     ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv # adding the columns to the head of an empty file.
 
 # --------------- for the indels, the same script except for file names --------------- #
 
@@ -678,7 +680,7 @@ funcotation_header=$(grep '^##' ${annotation_dir}/SRR5439568_hptpcl_indels_fltrd
                    sed 's/ //g;s/>//g;s/"//g') # remove spaces, double quotes, and right arrows from the string.
 echo ${funcotation_header##*\Funcotationfieldsare:} | \
      sed 's/|/\t/g' > \ # replace pipes '|' with tabs '\t'.
-		 ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv # adding the columns to the head of an empty file.
+     ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv # adding the columns to the head of an empty file.
 ```
 
 - **Adding annotations values to the variants annotations table file** - ****First, we use GATK’s ***VariantsToTable*** function to withdraw the FUNCOTATION values from the INFO column. We drop the values into a temporary file, that will soon be deleted.
@@ -697,7 +699,7 @@ echo ${funcotation_header##*\Funcotationfieldsare:} | \
       # 1.3) Uniting the column's name and the data itself to form a table (tsv file).
     grep -v 'FUNCOTATION' ${annotation_dir}/SRR5439568_annotated_variants_snps_tmp.tsv | \
          sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
-    		 >> ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv
+    	 >> ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv
     rm ${annotation_dir}/SRR5439568_annotated_variants_snps_tmp.tsv
     
     # --------------- for the indels, the same script except for file names --------------- #
@@ -710,7 +712,7 @@ echo ${funcotation_header##*\Funcotationfieldsare:} | \
       # 2.3) Uniting the column's name and the data itself to form a table (tsv file).
     grep -v "FUNCOTATION" ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv | \
          sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
-    		 >> ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv
+    	 >> ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv
     rm ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv
     ```
     
@@ -740,14 +742,14 @@ The annotated variant table contains columns that described them. For instance, 
 
 ```bash
 -->> cat ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv | \ # checking the annotated indels file
-		 grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
-		 grep -v -E "Benign|benign|synonymous|INTRON"
+	 grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
+	 grep -v -E "Benign|benign|synonymous|INTRON"
 
 Gencode_27_hugoSymbol   Gencode_27_ncbiBuild    Gencode_27_chromosome   Gencode_27_start        Gencode_27_end  Gencode_27_variantClassi
 
 -->> cat ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv | \ # checking the annotated SNPs file
-		 grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
-		 grep -v -E "Benign|benign|synonymous|INTRON"
+	 grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
+	 grep -v -E "Benign|benign|synonymous|INTRON"
 
 Gencode_27_hugoSymbol   Gencode_27_ncbiBuild    Gencode_27_chromosome   Gencode_27_start        Gencode_27_end  Gencode_27_variantClassification        Gen...
 GALT      hg38    chr9    34647227        34647227        MISSENSE        SNP       T    T    C    g.chr9:34647227T>C      ENST00000556278.1       + ...

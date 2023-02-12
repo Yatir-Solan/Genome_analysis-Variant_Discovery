@@ -361,10 +361,10 @@ SRR5439568_srtd.bam # the output of the alignment
     # BQSR - Base quality scores adjustments
      # 1) creating the model
     gatk BaseRecalibrator \
-    	-R ${reference_genome} \
-    	-I ${alignment_dir}/SRR5439568_srtd_mrkdpl.bam \
-    	--known-sites ${known_sites} \
-    	-O ${alignment_dir}/recalibration.table
+        -R ${reference_genome} \
+        -I ${alignment_dir}/SRR5439568_srtd_mrkdpl.bam \
+        --known-sites ${known_sites} \
+        -O ${alignment_dir}/recalibration.table
     
     # 2) applying the model
     gatk ApplyBQSR \

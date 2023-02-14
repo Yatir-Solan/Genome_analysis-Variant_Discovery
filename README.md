@@ -4,9 +4,9 @@
 
 Genome analysis is a fundamental field within bioinformatics. Nevertheless, because my research subject as part of my computational biology MSc studies, was in other bioinformatics realms, I did not have the opportunity to dive deeply into it.
 
-Therefore, I decided to gain knowledge in this field by conducting a small personal project - Whole Exome Sequencing (WES) analysis and **Variant discovery**. In this project, I decided to use **GATK.** GATK stands for Genome Analysis Toolkit, it was developed by the Broad institute and it is widely common for genome analysis and variant discovery. Besides developing individual tools, GATK is maintaining recommended research workflows, so scientists could follow them. These workflows, which are named GATK’s **best practices workflows ([link](https://gatk.broadinstitute.org/hc/en-us/articles/360035894711-About-the-GATK-Best-Practices)),** involve both tools from GATK, and other software, and they are comprehensively depicted and documented on GATK’s website. Here, I shall follow the workflow for **Germline short variant discovery ([link](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)).**
+Therefore, I decided to gain knowledge in the field by conducting a small personal project - Whole Exome Sequencing (WES) analysis and **Variant discovery**. In this project, I decided to use **GATK.** GATK stands for Genome Analysis Toolkit, it was developed by the Broad institute and it is widely common for genome analysis and variant discovery. Besides developing individual tools, GATK is maintaining recommended research workflows, so scientists could follow. These workflows, which are named GATK’s **best practices workflows ([link](https://gatk.broadinstitute.org/hc/en-us/articles/360035894711-About-the-GATK-Best-Practices)),** involve both tools from GATK, and other software, and are comprehensively depicted and documented on GATK’s website. Here, I shall follow the workflow for **Germline short variant discovery ([link](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)).**
 
-The main *.md file (the one you currently read), will follow the conducted research pipeline.  Here, code lines will appear beside a comprehensive text to elaborate on the tools, methods, and concepts behind it. The raw pipeline, which is mainly a bash script (main_script.sh) can be found within the code section of the repository. 
+The main *.md file (the one you currently read), will follow the conducted research pipeline.  Here, code lines will appear beside a comprehensive text to elaborate on the tools, methods, and concepts behind it. The raw pipeline, which is a bash script (main_script.sh) is found within the code section of the repository. 
 
 Hopefully, this repository, together with the documents in it, will help others who are new to this field. 
 
@@ -15,7 +15,7 @@ Hopefully, this repository, together with the documents in it, will help others 
 # Case study and objectives
 
 - **Case study** - A newborn male baby, was born to two healthy parents. Several days after his birth he started having diarrhea, throwing up, and his skin turned somewhat yellow. The infant’s exome was obtained (SRR5439568), and was sent for genetic analysis.
-- **Objectives** - Analyze the given exome and generate genetic diagnosis for his health condition.
+- **Objective** - To analyze the given exome and generate genetic diagnosis for his health condition.
 
 ---
 
@@ -31,17 +31,15 @@ Hopefully, this repository, together with the documents in it, will help others 
 1. **Obtaining the data**.
 2. **Data Pre-processing** :
     1. Reads quality control.
-    2. Mark duplicated reads.
+    2. Mark duplicate reads.
     3. Base Quality Scores Recalibration (BQSR).
 3. **Variant discovery**.
-    1. Variant calling.
-    2. Variant filtration.
 4. **Variant** **filtration.**
 5. **Variant annotation**.
 
-### Germline short variant discovery
+### Choosing the right workflow
 
-**Germline** mutations are mutations that can be found already in the germ cells, and therefore they are present within all other body cells and considered inheritable. In opposed to that, **Somatic** mutations are mutations that appear spontaneously within specific cells, and many times they are causative of cancer. 
+**Germline** mutations are mutations that can be found already in the germ cells, and therefore they are present within all other body cells and considered inheritable. In opposed to that, **Somatic** mutations are mutations that appear spontaneously within specific cells, and many times they are causative of cancer. Our analysis does not involve cancer, and there is only a single sample. In addition, because our data is exomic, it is less suitable for structural variation discovery. Therefore, the **Germline short variant discovery (SNPs + Indels)** workflow is the most suited for our case, hence we shall implement it here.
 
 ---
 
@@ -51,7 +49,7 @@ Hopefully, this repository, together with the documents in it, will help others 
 
 ### Initialization
 
-Loading the relevant modules.
+Loading modules.
 
 ```bash
 module load AWScli/aws-cli-2.1.0
@@ -62,7 +60,7 @@ module load bcftools/bcftools-1.6
 module load gatk # version 4.1.7.0
 ```
 
-The work will be arranged in 4 directories - reads, alignment, variants, and annotation. In addition, I shall arrange all paths as bash parameters, so all are commands will be tighter and more readable. 
+The work will be arranged in 4 directories - reads, alignment, variants, and annotation. In addition, I shall arrange all paths as bash variables, so commands will be tighter and more readable. 
 
 ```bash
 # Creating directories :
@@ -70,7 +68,7 @@ mkdir /NGS_variant_discovery # the analysis main directory.
 cd /NGS_variant_discovery
 mkdir reads alignment variants annotation
 
-# Paths & Parameters initialization:
+# Paths & variables initialization:
 reads_dir="/NGS_analysis/reads"
 alignment_dir="/NGS_analysis/alignment"
 variants_dir="/NGS_analysis/variants"
@@ -185,14 +183,14 @@ fastqc ${raw_reads1} ${raw_reads2}
 
 **FastQC results -** 
 
-Print screens of one of the files are given when needed. Through all the measurements - the QC results of both files look generally the same.
+Print screens of one of the files are given when needed. Through all the measurements - the QC results of both files look generally similar.
 
 - **Base quality scores** - above 30 (green zone) for all reads (both files), and there is no significant quality decay toward the margins of the reads.
     
     ![alt text](per_base_sequence_quality.png)
     
 - **Mean sequence quality scores** - The vast majority of the reads maintain mean quality scores that are above 30.
-- **Per base sequence content** - Both files show a rather unbiased distribution. (to my knowledge the slight fluctuation within the beginning is fairly normal).
+- **Per base sequence content** - Both files show a rather unbiased distribution. The slight fluctuation within the beginning is pretty normal).
     
     ![alt text](per_base_sequence_content.png)
     
@@ -209,17 +207,17 @@ Print screens of one of the files are given when needed. Through all the measure
 - **Overrepresented sequences - Warning.**
 - **Adaptor content** - None for both.
 
-**Quality Control conclusion** - The sequencing is in a good shape, but it needs to undergo duplicate reads marking (will be applied after the alignment).
+**Quality Control conclusion** - In general, the sequencing is in good shape, but duplicate reads marking is required (will be applied after the alignment).
 
 ### Reads Mapping (alignment)
 
 We shall combine 3 commands into a single piped command line.
 
-- **BWA mem** - Both BWA and STAR were considered for aligners. BWA was chosen because it is faster. Efficiency was also considered when choosing the aligner algorithm within BWA. Therefore, the ***bwa mem*** algorithm was chosen. Anyway, using ***bwa mem*** follows the recommended workflow by GATK.
-    - *-R → Read group data. In the case of multiple sample alignment, a tag is needed to distinguish between them within the downstream analysis. In this example, even though we deal with a single individual, it is a good practice to maintain this convention. A proper read group tag header is a tab-delimited string, that starts with ‘@’. It is common to reference the flowcell and the lane in the ID, the sequencing platform in the PL, and to give an informative SM (Sample Name).*
+- **BWA mem** - Both BWA and STAR were considered for aligners. BWA was chosen because it is faster. Efficiency was also considered when choosing the aligner algorithm within BWA. Therefore, the ***bwa mem*** algorithm was chosen. Anyway, using ***bwa mem*** follows GATK's recommendation.
+    - *-R → Read group data. In the case of multiple sample alignment, a tag is required in order to differentiate between them in downstream analysis. Here, we deal with a single individual. nevertheless, it is a good practice to maintain the convention. A proper read group tag header is a tab-delimited string, that starts with ‘@’. It is common to reference the flowcell and the lane in the ID, the sequencing platform in the PL, and to give an informative SM (Sample Name). Here, I will specify the accession (SRR5439568) as ID, and the sample will be marked as 'KID'*
     - *-t → Threads number.*
 - **Coordinate Sort** - Sorting the alignment file using ***samtools sort*** (more about this step in the following).
-- **Converting the SAM → BAM** - SAM (Sequence Alignment Map) is usually a large file, therefore it is more convenient to work with a binary file - BAM file (Binary sequence Alignment Map). We can do this with ***samtools view***.
+- **Converting the SAM → BAM** - SAM (Sequence Alignment Map) is usually a large file, therefore it is more convenient to work with a compressed binary file - BAM file (Binary sequence Alignment Map). That can be done with ***samtools view***.
     - *-h → (headers) Include the headers in the output.*
     - *-b → BAM output.*
     - *-o → output file name*
@@ -300,14 +298,14 @@ SRR5439568_srtd.bam # the output of the alignment
     
 - **Marking duplicates -**
     
-    Duplicated reads produced by NGS are not rare. The duplication is being produced first, in the PCR amplification (PCR duplicates) step, on which duplicates are created on purpose, and therefore, by chance, some of the reads will be duplicated. In addition, duplicates can arise in the sequencing step, caused by optical errors of neighboring flowcells (Optical duplicates). Reads duplication can reduce the reliability of the analysis. As can be seen in the aforementioned statistics results, to this point, none of the reads are considered duplicates. Therefore we should locate them and tag them, so later they will be ignored. Here, we shall use the GATK **MarkDuplicates** command. A command that adds tags to the duplicates. Later on in the pipeline, most downstream tools ignore the tagged duplicates. In fact, **MarkDuplicates** is GATK’s wrapper for the **Picard** program algorithm (with the same name), and it could be run directly using Picard.
+    Duplicate reads produced by NGS are not rare. The duplication is being produced first, in the PCR amplification (PCR duplicates) step, on which duplicates are created on purpose, and therefore, by chance, some of the reads will be duplicated. In addition, duplicates can arise in the sequencing step, caused by optical errors of neighboring flowcells (Optical duplicates). Reads duplication can reduce the reliability of the analysis. As can be seen in the aforementioned statistics results, to this point, none of the reads are considered duplicates. Therefore, we should locate them and tag them, so that later they will be ignored. We shall use the GATK **MarkDuplicates** command. A command that adds tags to the duplicates. Later on in the pipeline, most downstream tools ignore the tagged duplicates. In fact, **MarkDuplicates** is GATK’s wrapper for the **Picard** program algorithm (with the same name), and it could be run also directly using Picard.
     
     - *-I → (input) → the raw BAM file.*
     - *-O → (output) → the marked BAM file.*
     - *-M → (metrics file) → a file to write duplication metrics to.*
     - -*ASO → (Assume sort order) → coordinate, because the BAM file is already sorted in coordinant order.*
     
-    After we have marked duplicate reads, ***samtools flagstat*** command counts them as well (6,403,892). 
+    After marked duplicated reads have been marked, ***samtools flagstat*** command counts them (6,403,892). 
     
     ```bash
     gatk MarkDuplicates \
@@ -334,7 +332,7 @@ SRR5439568_srtd.bam # the output of the alignment
     
 - **Base quality recalibration (BQSR) -**
     
-    Quality scores of the bases (which were given to us by the sequencer) have a significant impact on a variant discovery analysis. Basically, the base scores are taken into account within variant calling algorithms, so that bases with lower scores will be treated with less confidence as opposed to others with higher quality scores. But, it has been shown, that quality scores can be significantly biased, mostly as a result of nucleotide context. Therefore, this step is aimed to locate systematically biased quality scores and to recalibrate them. BQSR procedure involves a ML process in which a set of known variants is given as input, then mismatches of the sample to the reference which are present in the known set are skipped so that the quality scores of unknown mismatches could be re-inferred. The procedure involves two GATK functions, ***BaseRecalibrator*** which creates the recalibrated scores and outputs these into a recalibration table, and ***ApplyBQSR*** applies the recalibrated scores to the BAM file. 
+    Quality scores of the bases (which were given to us by the sequencing machine) have a significant impact on a variant discovery analysis. Basically, the base scores are taken into account within variant calling algorithms, so that bases with lower scores will be treated with less confidence as opposed to others with higher quality scores. But, it has been shown, that quality scores can be significantly biased, mostly as a result of nucleotide context. Therefore, this step is aimed to locate systematically biased quality scores and to recalibrate them. BQSR procedure involves a ML process in which a set of known variants is given as input, then mismatches of the sample to the reference which are present in the known set are skipped so that the quality scores of unknown mismatches could be re-inferred. The procedure involves two GATK functions, ***BaseRecalibrator*** which creates the recalibrated scores and outputs these into a recalibration table, and ***ApplyBQSR*** applies the recalibrated scores to the BAM file. 
     
     - ***BaseRecalibrator -***
         - *-R → (reference genome)*

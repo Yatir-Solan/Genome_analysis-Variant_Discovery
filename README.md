@@ -209,7 +209,7 @@ Print screens of one of the files are given when needed. Through all the measure
 - **Overrepresented sequences - Warning.**
 - **Adaptor content** - None for both.
 
-**Quality Control conclusion** - The sequencing is in a good shape, but it needs to undergo duplicate reads removal (will be applied after the alignment).
+**Quality Control conclusion** - The sequencing is in a good shape, but it needs to undergo duplicate reads marking (will be applied after the alignment).
 
 ### Reads Mapping (alignment)
 
@@ -300,7 +300,7 @@ SRR5439568_srtd.bam # the output of the alignment
     
 - **Marking duplicates -**
     
-    Duplicated reads produced by NGS are not rare. The duplication is being produced first, in the PCR amplification (PCR duplicates) step, on which duplicates are created on purpose, and therefore, by chance, some of the reads will be duplicated. In addition, duplicated reads can arise in the sequencing step, caused by optical errors of neighboring flowcells (Optical duplicates). Reads duplication can reduce the reliability of the analysis. As can be seen in the aforementioned statistics results, to this point, none of the reads are considered duplicates. Therefore we should locate them and tag them, so later they will be ignored. Here, we shall use the GATK **MarkDuplicates** command. A command that adds tags to the duplicated reads. Later on in the pipeline, most downstream tools ignore the tagged duplicates. In fact, **MarkDuplicates** is GATK’s wrapper for the **Picard** program algorithm (with the same name), and it could be run directly using Picard.
+    Duplicated reads produced by NGS are not rare. The duplication is being produced first, in the PCR amplification (PCR duplicates) step, on which duplicates are created on purpose, and therefore, by chance, some of the reads will be duplicated. In addition, duplicates can arise in the sequencing step, caused by optical errors of neighboring flowcells (Optical duplicates). Reads duplication can reduce the reliability of the analysis. As can be seen in the aforementioned statistics results, to this point, none of the reads are considered duplicates. Therefore we should locate them and tag them, so later they will be ignored. Here, we shall use the GATK **MarkDuplicates** command. A command that adds tags to the duplicates. Later on in the pipeline, most downstream tools ignore the tagged duplicates. In fact, **MarkDuplicates** is GATK’s wrapper for the **Picard** program algorithm (with the same name), and it could be run directly using Picard.
     
     - *-I → (input) → the raw BAM file.*
     - *-O → (output) → the marked BAM file.*

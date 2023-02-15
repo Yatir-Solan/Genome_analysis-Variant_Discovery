@@ -514,7 +514,7 @@ In this stage, we aim to omit false positives variants, which have emerged from 
     chr1    187102  .       C       G       34.64   QD_flt  AC=1;AF=0.500;AN=2;BaseQRankSum=-0.402;DP=32;ExcessHet=3.0103;FS=1.845;MLE...
     ```
     
-    Nevertheless, the FILTER columns hold tags for site-level filtration only. As was demonstrated previously, we also filtered variants concerning the sample-level properties. To see the tags regarding those, we should examine the **KID** column, which is the only sample presence in our case. In the code box below I concluded five specific variant records, all of which passed the site-level filters, therefore they all are marked with PASS in the FILTER column. Nevertheless, concerning sample-level, only one of them passed the filters. That can be seen in the KID column, for which the filtration names (DP_flt, GQ_flt) we applied are found in the ones they failed it. 
+    Nevertheless, the FILTER columns hold tags for site-level filtration only. As was demonstrated previously, we also filtered variants concerning the sample-level properties. To see the tags regarding those, we should examine the **KID** column, which is the only sample presence in our case. In the code box below I concluded five specific variant records, all of which passed the site-level filters, therefore they all are marked with PASS in the FILTER column. Nevertheless, concerning sample-level, only one of them passed the filters. That can be seen in the KID column, for which the filtration names (DP_flt, GQ_flt) we applied are found in the ones that failed it. 
     
     ```bash
     -->> grep -v '^##' ${variants_dir}/SRR5439568_hptpcl_snps_tag.vcf | awk 'NR==1||NR>=57&&NR<=61' | cut -f 7,9,10

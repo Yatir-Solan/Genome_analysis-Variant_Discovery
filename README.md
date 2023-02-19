@@ -410,9 +410,9 @@ SRR5439568_srtd.bam # the output of the alignment
 
 ---
 
-## 3. Variants Discovery
+## 3. Variant Discovery
 
-### Variants Calling
+### Variant Calling
 
 This step is performed by GATK’s ***HaplotypeCaller*** function. This function is the most essential in our pipeline, and its details are covered in more depth in the [link](https://gatk.broadinstitute.org/hc/en-us/articles/360035531412-HaplotypeCaller-in-a-nutshell). Here, we shall brief the principles. The algorithm’s main objective is to locate systematic mismatches of the aligned reads with respect to the reference genome. Or, in simple words - to identify variants. First, the program utilizes a sliding window to look for locations with significant evidence for variation, which are defined as **active regions**. Then, each active region is **reassembled** using De Bruijn-like to produce possible haplotypes, and re-align them to the reference. Afterward, a **haplotype likelihood** for each genomic position within the active regions is calculated. And eventually, a **genotype likelihood** for each variant position is calculated.
 
@@ -430,7 +430,7 @@ This step is performed by GATK’s ***HaplotypeCaller*** function. This function
 
 ---
 
-## 4. Variants Filtration
+## 4. Variant Filtration
 
 In this stage, we aim to omit false positives variants, which have emerged from the variant calling step. There are two filtration approaches - Hard filtering and VQSR (Variant Quality Score Recalibration). **VQSR** is the more sophisticated approach. It uses large datasets of known variants to teach ML models the characteristics of true and false variants so that deciphering between variants on the examined data could be made. Nevertheless, VQSR requires data that is present in humans mostly, and for some model organisms. But it does not in many others. On the other hand, **Hard filtering** is a relatively crude and simple procedure, because it basically utilizes thresholds of different measurements to filter the variants. Therefore, Hard filtering is much more robust and fits all organisms. Because of that, even though it is human research, we shall stick with the **Hard filtering** approach. 
 

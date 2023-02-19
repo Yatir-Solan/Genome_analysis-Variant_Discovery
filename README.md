@@ -629,7 +629,7 @@ gatk Funcotator \
     --output-file-format VCF
 ```
 
-The output of GATK’s ***Funcotator*** function is the same VCF but enriched with the annotations within it. The annotations are designated to appear in the INFO column, and they are described in the header sections as FUNCOTATION. In the code box below I’ve selected the first 4 variant records and asked to see the INFO column only. As can be seen, after the ‘FUNCOTATION=’ string in brackets ‘[’ / ‘]’ there are several values delimited by vertical bars ‘|’ pipes. These values are the functional annotations, that were enriched by ***Funcotator.*** Each corresponds with the variant record they are found in.
+The output of GATK’s ***Funcotator*** function is the same VCF but enriched with the annotations within it. The annotations are designated to appear in the INFO column, and they are described in the header sections as FUNCOTATION. In the code box below I’ve selected the first 4 variant records and extracted the 8th column (which is the INFO column) only. As can be seen, after the ‘FUNCOTATION=’ string in brackets ‘[’ / ‘]’ there are several values delimited by vertical bars ‘|’ pipes. These values are the functional annotations, that were enriched by ***Funcotator.*** Each corresponds with the variant record they are found in.
 
 ```bash
 -->> grep -v '^##' SRR5439568_Hplocall_snps_fltrd_anttd.vcf | cut -f 8 | head
@@ -726,19 +726,20 @@ MTHFR   hg38    chr1    11794698        11794698        INTRON          SNP     
 
 ### Diagnosis
 
-The annotated variant table contains columns that described them. For instance, the clinical significance of the variants (benign, pathogenic, etc), variant classification (missense, splice site, etc), and more. We can use these columns to minimize the table, to only variants whose functional annotations suit the clinical disorder which our case deals with. Here, I included the following prerequisites:
+The annotated variant table contains description columns. For instance, the clinical significance (benign, pathogenic, etc), variant type classification (missense, splice site, etc), and more. We can use these columns to filter the table so that it will contatin only variants whose functional annotations suit the clinical disorder which our case deals with. The filtration prerequisites that were applied :
 
-- **Column’s names** - Include columns names will appear when we examine the results
+- **Column’s names** - Include the names of the columns.
 - **Clinical significance:**
     - Include only records, which are considered **pathogenic**.
     - Exclude records that are annotated as **benign**.
-- **Variant location** - Exclude variants in intronic realms.
+- **Variant location** - Exclude variants in intronic locations.
 
 ```bash
 -->> cat ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv | \ # checking the annotated indels file
      grep -E "Pathogenic|pathogenic|Gencode_27_hugoSymbol" | \
      grep -v -E "Benign|benign|synonymous|INTRON"
-
+     
+# There are no Indels that suits our clinical condition.
 Gencode_27_hugoSymbol   Gencode_27_ncbiBuild    Gencode_27_chromosome   Gencode_27_start        Gencode_27_end  Gencode_27_variantClassi
 
 -->> cat ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv | \ # checking the annotated SNPs file

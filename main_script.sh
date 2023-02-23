@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 ### -------------- ###
 ### Initialization ###
 ### -------------- ###
@@ -45,6 +47,7 @@ wget -P ${known_sites_dir} https://storage.googleapis.com/genomics-public-data/r
 gatk FuncotatorDataSourceDownloader -germline true -validate-integrity true -extract-after-download true 
 
 
+
 ### ------------------- ###
 ### Data pre-processing ###
 ### ------------------- ###
@@ -80,6 +83,8 @@ gatk ApplyBQSR \
     -O ${alignment_dir}/SRR5439568_srtd_mrkdpl_bqsr.bam
 
 analaysis_ready_bam=${alignment_dir}/SRR5439568_srtd_mrkdpl_bqsr.bam
+
+
 
 ### ----------------- ###
 ### Variant Discovery ###
@@ -153,6 +158,8 @@ echo "$(grep -v -E 'DP_flt|GQ_flt' ${variants_dir}/SRR5439568_hptpcl_indels_fltr
 
 annotation_ready_SNPs=${variants_dir}/SRR5439568_hptpcl_snps_fltrd.vcf
 annotation_ready_indels=${variants_dir}/SRR5439568_hptpcl_indels_fltrd.vcf
+
+
 
 ### ------------------ ###
 ### Variant annotation ### 

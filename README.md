@@ -56,7 +56,6 @@ module load AWScli/aws-cli-2.1.0
 module load sratoolkit.3.0.1
 module load bwa # version 0.7.17
 module load samtools # version 1.9
-module load bcftools/bcftools-1.6
 module load gatk # version 4.1.7.0
 ```
 

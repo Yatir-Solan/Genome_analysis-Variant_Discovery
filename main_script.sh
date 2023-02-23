@@ -91,7 +91,7 @@ gatk HaplotypeCaller \
     -I ${analaysis_ready_bam} \
     -O ${variants_dir}/SRR5439568_hptpcl.vcf
 
-# Deviding the variants to SNOs and Indels
+# Deviding the variants to SNPs and Indels
  # 1) SNPs
 gatk SelectVariants \
     -V ${variants_dir}/SRR5439568_hptpcl.vcf \
@@ -140,7 +140,7 @@ gatk SelectVariants \
 echo "$(grep -v -E 'DP_flt|GQ_flt' ${variants_dir}/SRR5439568_hptpcl_snps_fltrd.vcf)" > \
       ${variants_dir}/SRR5439568_hptpcl_snps_fltrd.vcf
 
-# --------------- for the indels, the same script except file names --------------- #
+# --------------- for the indels, the same script except for file names --------------- #
 
  # 2.1) Indels - Exclude variants that failed to pass site-level filtration.
 gatk SelectVariants \
@@ -167,7 +167,7 @@ gatk Funcotator \
     -V ${annotation_ready_SNPs} \
     -O ${annotation_dir}/SRR5439568_hptpcl_snps_fltrd_anttd.vcf \
     --output-file-format VCF
-# --------------- for the indels, the same script except file names --------------- #
+# --------------- for the indels, the same script except for file names --------------- #
  # 2) Indels
 gatk Funcotator \
     -R ${reference_genome} \
@@ -177,9 +177,9 @@ gatk Funcotator \
     -O ${annotation_dir}/SRR5439568_hptpcl_indels_fltrd_anttd.vcf \
     --output-file-format VCF
 
-# Creating a table with variants and their annotations
+# Creating a table file with variants and their annotations
  # 1) SNPs 
-  # 1.1) Extracting the column's names from the header section of the VCF into an a new empty file. 
+  # 1.1) Extracting the column names from the header section of the VCF into an a new empty file. 
 funcotation_header=$(grep '^##' ${annotation_dir}/SRR5439568_hptpcl_snps_fltrd_anttd.vcf | \
                    grep 'FUNCOTATION' | \
                    sed 's/ //g;s/>//g;s/"//g') # remove spaces, double quotes, and right arrows from the string.
@@ -198,7 +198,7 @@ grep -v 'FUNCOTATION' ${annotation_dir}/SRR5439568_annotated_variants_snps_tmp.t
 sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
 >> ${annotation_dir}/SRR5439568_annotated_variants_snps.tsv
 
-rm ${annotation_dir}/SRR5439568_annotated_variants_snps_tmp.tsv
+rm ${annotation_dir}/SRR5439568_annotated_variants_snps_tmp.tsv # Deleting the temporary file.
 
 # --------------- for the indels, the same script except file names --------------- #
 
@@ -222,6 +222,6 @@ grep -v "FUNCOTATION" ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp
 sed 's/[][]//g;s/|/\t/g' \ # removing square brackets from the string, and replace pipes '|' with tabs '\t'.
 >> ${annotation_dir}/SRR5439568_annotated_variants_indels.tsv
 
-rm ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv # adding the columns to the head of an empty file
+rm ${annotation_dir}/SRR5439568_annotated_variants_indels_tmp.tsv # Deleting the temporary file.
 
 ### --------- the end --------- ###

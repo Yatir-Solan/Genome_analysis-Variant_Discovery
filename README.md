@@ -124,7 +124,7 @@ annotation_dir='/NGS_variant_discovery/2nd_pipeline/annotation'
             ```bash
             # Examine the index files that cane in with the reference genome
             -->> ls /NGS_analysis/reference/Homo_sapiens/GATK/GRCh38/Sequence/BWAIndex/ -1
-            Homo_sapiens_assembly38.fasta.64.alt **# what exactly is this file?**
+            Homo_sapiens_assembly38.fasta.64.alt 
             Homo_sapiens_assembly38.fasta.64.amb # BWA index file 
             Homo_sapiens_assembly38.fasta.64.ann # BWA index file 
             Homo_sapiens_assembly38.fasta.64.bwt # BWA index file 
